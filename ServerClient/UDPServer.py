@@ -20,7 +20,7 @@ def receive(s1):
         print ("Received %s bytes from %s %s: " % (len(buf), address, buf ))
         data=buf.decode('utf-8')
     else:
-        print("Receive Timeout")
+        print("Receiving TIMEOUT")
         data=False
     return data
     
