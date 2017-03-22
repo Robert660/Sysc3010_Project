@@ -11,10 +11,11 @@ def setup(port1,address1,port2,address2):
     s2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s2.setblocking(0)    
     server_address2 = (address2, port2)
+    print(receive(s1))
     return s1,s2,server_address1,server_address2
 
 def receive(s1):
-    msg=select.select([s1],[],[],5)
+    msg=select.select([s1],[],[],10)
     if msg[0]:
         buf, address = s1.recvfrom(2048)
         print ("Received %s bytes from %s %s: " % (len(buf), address, buf ))

@@ -5,13 +5,14 @@ def setup(port1,address1,port2,address2):
     s1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s1.setblocking(0)
     server_address1 = (address1, port1)
-    #input("Press Enter when Server ready")
+    input("Press Enter when Server ready")
     s2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s2.setblocking(0)
     server_address2 = (address2, port2)
     s2.bind(server_address2)
     print(s2.getsockname())
-
+    print("Sending Confirmation")
+    send("Connection Complete",s1,server_address1)
     return s1,s2,server_address1,server_address2
     
 
