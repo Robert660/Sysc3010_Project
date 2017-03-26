@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 public class GPS extends AppCompatActivity {
 
+    //For now this will only output the GPS to a text field
+
 
     TextView gpsLocation;
     LocationManager locationManager;
@@ -86,8 +88,7 @@ public class GPS extends AppCompatActivity {
                 }
                 return;
             }
-            // other 'case' lines to check for other
-            // permissions this app might request
+
         }
     }
 	

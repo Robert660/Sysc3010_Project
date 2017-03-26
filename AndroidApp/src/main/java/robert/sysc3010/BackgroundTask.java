@@ -5,21 +5,36 @@ package robert.sysc3010;
 
 
 import android.content.Context;
+
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLEncoder;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.system.Os;
+import android.util.Log;
+import android.util.Xml;
+import android.widget.Toast;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 
-public class BackgroundTask extends AsyncTask<String,Void,Void> {
+public class BackgroundTask extends AsyncTask<String,Void,String> {
+
+    //TODO on post execute we should check if the username is in use, then TOAST them and send them back to MainMenu
 
     Context ctx;
+    private static final String TAG = "TEST";
+    public String testing;
+
+
+
 
     BackgroundTask(Context ctx){
         this.ctx = ctx;
@@ -27,45 +42,70 @@ public class BackgroundTask extends AsyncTask<String,Void,Void> {
 
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
+    protected void onPostExecute(String result) {
+        if (testing == "done") {
+            Toast.makeText(ctx, "User Registered!", Toast.LENGTH_LONG).show();
+        }
+        else{
+            Toast.makeText(ctx, "Try Again", Toast.LENGTH_LONG).show();
+        }
     }
+
 
     @Override
-    protected Void doInBackground(String... params) {
-        String reg_url = "http://10.0.2.2/webapp/register.php";//TODO change these and write them
-        String log_url = "http://10.0.2.2/webapp/login.php";
+    protected String doInBackground(String... params) {
+        /*
+        If using physical device you need the server ip + server listen port
+        apache's listen port is 80
+        if using emulator, you can use "localhost" or "127.0.0.1" with no port
+         */
+        String reg_url = "http://192.168.1.146:80/register.php";
+        String log_url = "http://192.168.1.146:80/login.php";//TODO We still need to write the login.php
 
         String option = params[0];
+        String username = params[1];
+        String password = params[2];
         if(option.equals("register")){
-            String username = params[1];
-            String password = params[2];
-            try{
-                URL url = new URL(reg_url);
-                HttpURLConnection connection =(HttpURLConnection) url.openConnection();
+
+            try{//Log.d will output to logcat so i can see at what step in the process we are at
+                Log.d(TAG,"Registration starting");
+                URL url = new URL(reg_url);//Create url for registering users
+                HttpURLConnection connection =(HttpURLConnection) url.openConnection();//Create connection with URL
+                Log.d(TAG,"Connecting to URL..."+connection.toString());
                 connection.setRequestMethod("POST");
+                Log.d(TAG,"Request Method set to POST");
                 connection.setDoOutput(true);
-                OutputStream OS = connection.getOutputStream();
-                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(OS));
-               // String data = URLEncoder.encode("user","UTF-8") + " =" + URLEncoder.encode(username,"UTF-8")+ "&"
+                Log.d(TAG,"Do output set to True");
+                Log.d(TAG, "Creating output Stream");
+                OutputStream OS = connection.getOutputStream();//Transmit data by writing to this stream
+                Log.d(TAG, "Oputput Stream Created");
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(OS,"UTF-8"));
+                String data = URLEncoder.encode("username","UTF-8") + "=" + URLEncoder.encode(username,"UTF-8")+ "&"+URLEncoder.encode("user_password","UTF-8") + "=" + URLEncoder.encode(password,"UTF-8");
+                Log.d(TAG,"Data Encoded and Sent");
+                bw.write(data);
+                bw.flush();
+                bw.close();
+                OS.close();
+                InputStream IS = connection.getInputStream();
+                IS.close();
+                Log.d(TAG,"Registration Finished");
+                testing="done";
+                return "Registration Success...";
+            }//end try
 
-
+            catch (MalformedURLException e){//Thrown by URL,
+                e.printStackTrace();
+                Log.d(TAG,"MalformException occured");
+                return null;
             }
-            catch (MalformedURLException e){
-
+            catch (IOException e){
+                e.printStackTrace();
+                Log.d(TAG,"IOEception Occured");
+                return null;
             }
-            catch (IOException e1){
-
-            }
-
-
-
-
-
-        }
-
+        }//end if register
         return null;
-    }
+    }//end method
 
     @Override
     protected void onProgressUpdate(Void... values) {

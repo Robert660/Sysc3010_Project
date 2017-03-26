@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Sysc3010</string>
+    <string name="title_activity_add_contacts">AddContacts</string>
 </resources>

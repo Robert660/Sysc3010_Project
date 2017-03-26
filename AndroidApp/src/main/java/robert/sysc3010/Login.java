@@ -9,6 +9,8 @@ import android.widget.EditText;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
+    //This activity will look similar t register, instead of adding to DB we check it for uName
+
     Button bLogin,newReg;
     EditText etUsername, etPassword;
     UserStorage userStorage;
