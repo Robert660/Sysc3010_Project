@@ -21,10 +21,6 @@ public class AddContacts extends AppCompatActivity implements View.OnClickListen
     private String[] phoneNumbers;
     private boolean retry;
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -58,7 +54,7 @@ public class AddContacts extends AppCompatActivity implements View.OnClickListen
     }
 
 
-    public void validate(String inputName,String inputNumber){//TODO is there any other cases?
+    public void validate(String inputName,String inputNumber){
         Log.d(TAG,"validating Values");
         Log.d(TAG,"inputName="+ inputName + "\ninputNumber="+inputNumber );
         CharSequence okNumbers = "1234567890";

@@ -21,10 +21,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     //TODO if the user doesn't allow internet access we should toast them and say they cannot register
 
     private static final String TAG= Register.class.getSimpleName();
-
-
     Button bRegister;
     EditText regUsername,regPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +48,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         BackgroundTask bt = new BackgroundTask(this);
         bt.execute(method,uName,uPass);
         finish();
-
     }
-
-
 
     @Override
     public void onClick(View v) {
@@ -60,10 +56,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
             case R.id.bRegister://if the register button was pressed
                 userRegister(v);
-                User user =new User(regUsername.getText().toString(),regPassword.getText().toString());//after registring user should move to next view
                 startActivity(new Intent(this, AddContacts.class));
-
-
                 break;
 
         }

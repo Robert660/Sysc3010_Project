@@ -8,7 +8,7 @@
         android:id="@+id/gpsLocation"
         android:layout_width="match_parent"
         android:text="Location:"
-        android:layout_height="30dp"
+        android:layout_height="100dp"
         android:layout_centerVertical="true"
         android:paddingLeft="25dp"/>
 
