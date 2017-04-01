@@ -250,30 +250,23 @@ public class DesktopGUI{
     	f.setVisible(true);
     }
     
+    //Establishes connection with MySQL Database
     private ResultSet connection() throws SQLException {
+	    	//Create a connection
 		Connection connect = null;
-		//int terminateConnect = 0;
+	    
+	    	//Connect to the database that you specify
 		try {
-
 			String url = "jdbc:mysql://192.168.43.54:3306/projectdb";
 			Class.forName("com.mysql.jdbc.Driver");
 			connect = DriverManager.getConnection(url, "fooUser", "1234");
-			System.out.println("Database connection established");
+			System.out.println("Database connection established.");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Database connection has not been established!");
+			System.out.println("There has been an error.");
 		}
-		/*
-		
-		finally {
-			if (connect != null && terminateConnect == 1) {
-				try {
-					connect.close();
-					System.out.println("Database connection terminated");
-				} catch (Exception e) {
-					/* ignore close errors  }
-			}
-		}*/
+	    
 		Statement statement = connect.createStatement();
 		return statement.executeQuery("select * from sensordata");
 	}
