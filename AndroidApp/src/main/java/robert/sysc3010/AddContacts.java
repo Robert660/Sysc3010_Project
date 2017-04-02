@@ -2,7 +2,6 @@ package robert.sysc3010;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,18 +39,18 @@ public class AddContacts extends AppCompatActivity implements View.OnClickListen
 
         add.setOnClickListener(this);
         next.setOnClickListener(this);
-
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add://if the add button was pressed
+
                 validate(cName.getText().toString(), pNum.getText().toString());
                 if (!retry) {
                     addNewNumber(cName.getText().toString(), pNum.getText().toString());
                 }
+                eventCheck();
                 break;
 
             case R.id.done://if the continue button was pressed
@@ -59,17 +58,36 @@ public class AddContacts extends AppCompatActivity implements View.OnClickListen
                 myGPS.setName(contacts);
                 myGPS.setNumbers(phoneNumbers);
                 startActivity(new Intent(this, GPS.class));
-                //NotifyClass nc = new NotifyClass(contacts,phoneNumbers);
                 break;
 
 
         }
     }
 
+    public void eventCheck(){
+        //start checking for events
+
+        String method = "Event";
+        BackgroundTask bt = new BackgroundTask(this);
+        bt.execute(method);
+
+        while(true){
+            if(bt.checkDone){
+                Log.d("Login",""+bt.check);
+                if(bt.check){
+                    startActivity(new Intent(this, AddContacts.class));
+                    break;
+                }
+                break;
+            }
+        }
+    }
+
+
 
     public void validate(String inputName,String inputNumber) {
-        Log.d(TAG, "validating Values");
-        Log.d(TAG, "inputName=" + inputName + "\ninputNumber=" + inputNumber);
+        //Check that the input was legitimate
+
         CharSequence dash = "-";
 
         if (inputName == "" || inputNumber == "") {
@@ -95,10 +113,8 @@ public class AddContacts extends AppCompatActivity implements View.OnClickListen
     }
 
 
-    public void addNewNumber(String inputName,String inputNumber){//Store phone number and contact name into arrays
-
-        Log.d("ADD_CONTACTS","Contact Size = " +size);
-        Log.d("ADD_CONTACTS","phonenumSize = "+size);
+    public void addNewNumber(String inputName,String inputNumber){
+        //Store phone number and contact name into arrays
 
         if(size>=3){
             Toast.makeText(ctx,"Max Contacts Reached",Toast.LENGTH_LONG).show();
@@ -114,11 +130,4 @@ public class AddContacts extends AppCompatActivity implements View.OnClickListen
             myGPS.setNumbers(phoneNumbers);
         }
     }
-
-
-
-
-
-
-
 }

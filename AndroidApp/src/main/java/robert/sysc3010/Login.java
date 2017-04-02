@@ -13,17 +13,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.concurrent.TimeUnit;
 
 public class Login extends AppCompatActivity implements View.OnClickListener  {
 
-    //this is the mainActivity, for now login goes to straight to GPS for testing
-    //Register will add the user to the database.
+    /*This is the main activity, enter the login details in the spaces, if
+    an account hasn't been made then register 1st
+     */
 
     Button bLogin,newReg;
     EditText etUsername, etPassword;
-    private Object lock = new Object();
-
 
 
     @Override
@@ -45,33 +43,26 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.bLogin://if it was the login button that was pressed
-                //NotifyClass nc = new NotifyClass();
-                //nc.showNotifications();
                 userLogin(v);
-                eventCheck();
                 break;
 
             case R.id.newReg://if the new Register button was pressed
-                showNotifications();
-
-                startActivity(new Intent(this, Register.class));
+                startActivity(new Intent(this, Register.class));//Move to the register activity
                 break;
-
-
         }
     }
 
     public void userLogin(View v){
+        //This method runs the background task to search for the username in the database
+        //then check the username to the etnered password.
 
         String uName = etUsername.getText().toString();
         String uPass = etPassword.getText().toString();
         String method = "login";
         BackgroundTask bt = new BackgroundTask(this);
         bt.execute(method,uName,uPass);
-
         while(true){
-            if(bt.finished){
-                Log.d("Login",""+bt.check);
+            if(bt.finished){//TODO COME BACK TO HERE FOR COMMENTS
                 if(bt.check){
                     startActivity(new Intent(this, AddContacts.class));
                     break;
@@ -80,47 +71,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
             }
         }
-
-    }
-
-
-    public void eventCheck(){
-        String method = "Event";
-        BackgroundTask bt = new BackgroundTask(this);
-        bt.execute(method);
-
-        while(true){
-
-            if(bt.checkDone){
-                Log.d("Login",""+bt.check);
-                if(bt.check){
-                    startActivity(new Intent(this, AddContacts.class));
-                    break;
-                }
-                break;
-
-            }
-        }
-
-
-    }
-
-
-    public void showNotifications(){//Creates a notification that leads to the NotifyClass when pushed
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.drawable.alert);
-        builder.setContentTitle("Content Title");
-        builder.setContentText("This is the content text");
-        //when the notification is pressed
-        Intent intent = new Intent(this,GPS.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(NotifyClass.class);
-        stackBuilder.addNextIntent(intent);
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(pendingIntent);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0,builder.build());
 
     }
 

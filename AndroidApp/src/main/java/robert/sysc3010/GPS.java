@@ -9,31 +9,21 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-
-
-import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 public class GPS extends AppCompatActivity implements View.OnClickListener{
     //updates the Database with the lat,long for the user
-    //also updates the GPS to the screen(not required just for testing)
+    //also updates the GPS to the screen
+    //also sends SMS to contacts
 
     public static String[] names ={};
     public static String[] numbers ={};
@@ -55,8 +45,7 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
 
 
     IntentFilter intentFilter;
-    String ericsPhone = "6138516257";
-    String surveshPhone = "6473829176";
+
     String myPhone = "6138507623";
 
 
@@ -75,7 +64,7 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
         startUp();
 
         gpsLocation = (TextView) findViewById(R.id.gpsLocation);
-        if(sendNow){
+        if(sendNow){//This was the flag set in BackgroundTask to send a SMS to everyone now
             notifyEveryone();
         }
 
@@ -83,6 +72,8 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
 
 
     public void startUp(){
+        //Start building the GPS listeners and begins listening
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         lastKnown = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
         locationListener = new LocationListener() {
@@ -123,19 +114,20 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    //Method for adding the GPS location of the user into our database
+
     public void update(){
+        //Updates the databse table with the lat, and long
+
         Log.d("GPS","Updating");
         String method = "GPS";
         String longitudeOutput = ""+lastKnown.getLongitude();
         String latitudeOutput = "" +lastKnown.getLatitude();
-
-
         BackgroundTask bt = new BackgroundTask(this);
         bt.execute(method,latitudeOutput,longitudeOutput);
     }
 
-	public boolean checkLocationPermission()//This method is required when using recquestLocationUpdates
+	public boolean checkLocationPermission()
+    //This method is required when using recquestLocationUpdates
     {
         String permission = "android.permission.ACCESS_COARSE_LOCATION";
         int res = this.checkCallingOrSelfPermission(permission);
@@ -150,8 +142,12 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 } else {
+
                     // permission denied, Disable the
                     // functionality that depends on this permission.
+                    //For now it will be ok, the case statement is not really required but
+                    //ill leave it in incase we want to add anything from now till submission
+                    //April 2, 2017
                 }
                 return;
             }
@@ -159,6 +155,9 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
         }
     }
     public void notifyEveryone(){
+        //Method that will send a sms to everyone in the contacts array
+        //sendSMS may be commented out since you could send a sms to anyone
+        //so to keep it safe it'll be commented out
 
         for(int i = 0;i<3;i++){
             String contactName = names[i];
@@ -169,14 +168,15 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
             String message = "Hello "+ contactName+", i've been in a serious accident at the following location: "+lastKnown.getLatitude() +", "+lastKnown.getLongitude();
             Log.d("NOTIFY",message);
             String number = numbers[i];
-            Log.d("Name:",names[0]);
-            Log.d("Numbers:",numbers[0]);
+
             //sendSMS(number,message);
 
         }
     }
     public void sendSMS(String phoneNumber, String message){
+        //method that sends a sms with the default messenger application on android
         //for testing these will remain commented out.
+
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumber,null,message,null,null);
     }
@@ -184,7 +184,8 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         notifyEveryone();
-       // sendSMS(myPhone,"TEST");
+       // sendSMS(myPhone,"TEST");// This is a test, if the sensSMS in notiy Everyone is commented out, this will work equally well
+        // and from here we can choose the message and phone Number, and it will only send 1 message to 1 contact
         Toast.makeText(ctx, "Message Sent!", Toast.LENGTH_LONG).show();
     }
     public void setName(String[] names){

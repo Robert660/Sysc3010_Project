@@ -8,31 +8,22 @@ import android.content.Context;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
-import android.system.Os;
 import android.util.Log;
-import android.util.Xml;
 import android.widget.Toast;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
+
 
 public class BackgroundTask extends AsyncTask<String,String,String> {
 
@@ -43,21 +34,20 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
         apache's listen port is 80
         if using emulator, you can use "localhost" or "127.0.0.1" with no port
          */
-    String reg_url = "http://192.168.1.146:80/register.php";
-    String log_url = "http://192.168.1.146:80/checkDB.php";
-    String gps_url = "http://192.168.1.146:80/gps.php";
-    String eventCheck_url = "http://192.168.1.146:80/eventCheck.php";
+    String reg_url = "http://192.168.1.146:80/register.php"; //php to register users
+    String log_url = "http://192.168.1.146:80/checkDB.php";//php to check db for username
+    String gps_url = "http://192.168.1.146:80/gps.php"; // php to add gps location to the username
+    String eventCheck_url = "http://192.168.1.146:80/eventCheck.php"; // polls the event type
 
     public String testing;
     public String mainSignIn = "Robert";
     Context ctx;
     public boolean check = false;
     public boolean finished =false;
-
     public boolean checkDone = false;
-    public String eventType="1";
-    public String prevEventType="1";
 
+    public String eventType="1";//Starting event is of type 1
+    public String prevEventType="1";//the starting event is of type 1
 
     public Object lock = new Object();
 
@@ -69,14 +59,13 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
     }
     @Override
     protected void onPostExecute(String result) {
-
+        //once the doInBackground is complete, onPostExecute gets ran
         finished = true;
         if (testing == "done") {
             Toast.makeText(ctx, "User Registered!", Toast.LENGTH_LONG).show();
         }
         if (check){
             Toast.makeText(ctx, "Successful Login!", Toast.LENGTH_LONG).show();
-            //TODO move to next activity
         }
         else if(!check){
             Toast.makeText(ctx, "Login Failed!", Toast.LENGTH_LONG).show();
@@ -93,8 +82,7 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
             String password = params[2];
             Log.d(TAG,""+password);
             mainSignIn=username;
-            check = checkDB(username,password);//TODO THIS WILL RETURN THE PASSWORD!
-            Log.d(TAG,""+check);
+            check = checkDB(username,password);//checkDB returns the password of the user
             finished=true;
 
         }
@@ -117,18 +105,17 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
                         if (!eventType.equals(prevEventType)) {
                             if (eventType.equals("2")) {
                                 Log.d(TAG, "NOTIFICATION 2 BEING CREATED");
-                                publishProgress(eventType);
-                                //Login nc = new Login();
-                                //nc.showNotifications();
+                                publishProgress(eventType);//interupts the main thread to run method on progressUpdate(String)
+
                             }
                             if (eventType.equals("3")) {
                                 Log.d(TAG, "NOTIFICATION 3 BEING CREATED");
                                 publishProgress(eventType);
-                                break;
+                                break;//Stop running and sms contacts
                             }
                         }
                         try {
-                            lock.wait(5000);
+                            lock.wait(5000);//poll the database every 5 seconds
                             lock.notify();
 
                         } catch (Exception e) {
@@ -144,6 +131,10 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
 
 
     public void listenForEvents(){
+        //method that polls the table Events, there is only 1 row that has 1 value for event
+        //event 1 is normal execution
+        //event 2 is notify the user with push notification
+        //event 3 is notify + send sms to all the selected contacts
         try {
             URL url = new URL(eventCheck_url);//Create url for registering users
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();//Create connection with URL
@@ -154,6 +145,10 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
             Log.d(TAG, "" + "EVENT IS OF TYPE: " + result);
 
             prevEventType=eventType;
+            //prevEventType holds the previous event,
+            // i will compare the difference between the two and if it changes
+            //then we do something.
+
             Log.d(TAG, "" + "PREVIOUS EVENT IS OF TYPE: " + prevEventType);
             if(result.equals("1")){
                 eventType="1";
@@ -185,6 +180,9 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
 
 
     public boolean checkDB(String username,String password){
+        //This method calls the php to poll the Users table for the username,  then check if
+        //it matches the password, it will return true if that is the case
+        //or it will return false otherwise
         try {
             URL url = new URL(log_url);//Create url for registering users
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();//Create connection with URL
@@ -226,6 +224,8 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
 
 
     public void sqlCommunicateHelper(String urlInput, String input1,String input2,String mode ){
+        //helper method to communicate with db
+
         String username=null;
         String password = null;
         String latitude = null;
@@ -292,6 +292,7 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
 
     @Override
     protected void onProgressUpdate(String... values) {
+        //this gets run when publish gets invoked.
 
             if (eventType.equals("2")) {
                 Log.d(TAG, "event 2 notification");
@@ -320,11 +321,18 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
         stackBuilder.addNextIntent(intent);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
+
+        builder.setVibrate(new long[]{1000,1000});
+
         NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0,builder.build());
 
     }
     public void notifyNow(){
+        // this is called for event 3
+        //this will create a new GPS instance
+        // since we cannot invoke any of the systemServices from here
+        //i will instead set a static flag in GPS where gps can check for if true, then it will send SMS
         Intent intent = new Intent(ctx,GPS.class);
         ctx.startActivity(intent);
         GPS myGPS = new GPS();
