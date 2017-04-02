@@ -13,10 +13,7 @@ $conn = new mysqli($server_name,$mysql_user,$mysql_pass,$db_name);
 
 if($conn->connect_error){
 	die("Connection failed: " .$conn->connect_error);
-	
 }
-
-
 $sql = "INSERT INTO users(username,password) VALUES('$username','$password')";
 //$sql = "INSERT INTO users(username,password) VALUES('Test','test')";
 
