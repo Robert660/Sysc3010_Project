@@ -39,7 +39,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
      * User register method calls background task which will create a new user
      * with the two textfields.
      */
-    public void userRegister(View v){
+    public void userRegister(){
         Log.d(TAG,"username ="+regUsername.getText().toString()+
                 " \npassword="+regPassword.getText().toString());
 
@@ -56,7 +56,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         switch (v.getId()){
 
             case R.id.bRegister://if the register button was pressed
-                userRegister(v);
+                userRegister();
                 startActivity(new Intent(this, AddContacts.class));
                 break;
 

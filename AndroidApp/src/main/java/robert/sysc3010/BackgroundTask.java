@@ -34,10 +34,10 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
         apache's listen port is 80
         if using emulator, you can use "localhost" or "127.0.0.1" with no port
          */
-    String reg_url = "http://192.168.1.146:80/register.php"; //php to register users
-    String log_url = "http://192.168.1.146:80/checkDB.php";//php to check db for username
-    String gps_url = "http://192.168.1.146:80/gps.php"; // php to add gps location to the username
-    String eventCheck_url = "http://192.168.1.146:80/eventCheck.php"; // polls the event type
+    static String reg_url = "http://192.168.1.146:80/register.php"; //php to register users
+    static String log_url = "http://192.168.1.146:80/checkDB.php";//php to check db for username
+    static String gps_url = "http://192.168.1.146:80/gps.php"; // php to add gps location to the username
+    static String eventCheck_url = "http://192.168.1.146:80/eventCheck.php"; // polls the event type
 
     public String testing;
     public String mainSignIn = "Robert";
@@ -75,6 +75,7 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
     @Override
     protected String doInBackground(String... params) {
 
+        Log.d(TAG,reg_url);
 
         String option = params[0];
         if(option.equals("login")){

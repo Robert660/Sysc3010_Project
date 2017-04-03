@@ -1,7 +1,15 @@
 package robert.sysc3010;
 
-import org.junit.Test;
+import android.content.Context;
+import android.test.ActivityTestCase;
+import android.widget.EditText;
 
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
@@ -9,9 +17,37 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class ExampleUnitTest {
-    @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+
+
+
+
+public class ExampleUnitTest extends AddContacts {
+
+    Context mockContext;
+    private AddContacts ac;
+
+    @Before
+    public void start(){
+       ac = new AddContacts();
+
     }
+   @Test
+    public void register_test() throws Exception{
+
+       ac.addNewNumber("A","");
+       ac.addNewNumber("A","");
+       ac.addNewNumber("A","");
+       ac.addNewNumber("A","");
+       int correctSize = 0;
+
+       assertThat(ac.size,is(correctSize));
+
+
+
+
+
+
+   }
+
+
 }

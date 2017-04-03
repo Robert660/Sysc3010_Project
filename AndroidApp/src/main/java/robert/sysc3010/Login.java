@@ -9,9 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 public class Login extends AppCompatActivity implements View.OnClickListener  {
@@ -20,12 +22,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
     an account hasn't been made then register 1st
      */
 
-    Button bLogin,newReg;
+    Button bLogin,newReg,hidden;
     EditText etUsername, etPassword;
-
+    int hiddenInc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -34,10 +38,21 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
         etPassword = (EditText)findViewById(R.id.etPassword);
         bLogin = (Button) findViewById(R.id.bLogin);
         newReg = (Button) findViewById(R.id.newReg);
+        hidden = (Button) findViewById(R.id.hidden);
+
 
         bLogin.setOnClickListener(this);
         newReg.setOnClickListener(this);
-    }
+        hidden.setOnClickListener(this);
+
+
+
+
+
+
+        }
+
+
 
     @Override
     public void onClick(View v) {
@@ -49,6 +64,17 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
             case R.id.newReg://if the new Register button was pressed
                 startActivity(new Intent(this, Register.class));//Move to the register activity
                 break;
+            case R.id.hidden:
+                hiddenInc++;
+                if(hiddenInc>= 7){
+                    hiddenInc=0;
+                    Toast.makeText(this, "Hidden Found!", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(this, HiddenChangeBT.class));
+
+
+                }
+
+
         }
     }
 

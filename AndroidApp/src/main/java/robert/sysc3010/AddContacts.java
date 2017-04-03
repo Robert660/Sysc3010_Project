@@ -20,14 +20,13 @@ public class AddContacts extends AppCompatActivity implements View.OnClickListen
     private String[] contacts;
     private String[] phoneNumbers;
     private boolean retry;
-    private int size;
+    public static int size = 0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         contacts = new String[3];//max 3 contacts
         phoneNumbers = new String[3]; // Max 3 phone numbers
-        size = 0;
         retry = false;
         ctx=this;
         super.onCreate(savedInstanceState);
@@ -125,6 +124,7 @@ public class AddContacts extends AppCompatActivity implements View.OnClickListen
             size++;
             int contactRem = 3-size;
             Toast.makeText(ctx,"Contact Added! "+contactRem+ " contacts remaining",Toast.LENGTH_LONG).show();
+
             GPS myGPS = new GPS();
             myGPS.setName(contacts);
             myGPS.setNumbers(phoneNumbers);

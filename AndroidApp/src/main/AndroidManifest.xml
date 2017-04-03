@@ -3,12 +3,13 @@
     package="robert.sysc3010">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <user-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <user-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
 
     <application
         android:allowBackup="true"
@@ -38,8 +39,9 @@
         <activity android:name=".Register" />
         <activity android:name=".GPS" />
         <activity android:name=".test" />
-        <activity android:name=".AddContacts"></activity>
-        <activity android:name=".End"></activity>
+        <activity android:name=".AddContacts" />
+        <activity android:name=".End" />
+        <activity android:name=".HiddenChangeBT"></activity>
     </application>
 
 </manifest>

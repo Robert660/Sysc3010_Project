@@ -41,11 +41,7 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
 
     Button sendSMS;
     Context ctx;
-
-
-
     IntentFilter intentFilter;
-
     String myPhone = "6138507623";
 
 
