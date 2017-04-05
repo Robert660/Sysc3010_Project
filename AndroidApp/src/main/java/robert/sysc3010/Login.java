@@ -66,7 +66,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
                 break;
             case R.id.hidden:
                 hiddenInc++;
-                if(hiddenInc>= 7){
+                if(hiddenInc>= 2){
                     hiddenInc=0;
                     Toast.makeText(this, "Hidden Found!", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(this, HiddenChangeBT.class));

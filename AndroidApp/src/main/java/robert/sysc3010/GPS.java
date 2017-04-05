@@ -43,6 +43,10 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
     Context ctx;
     IntentFilter intentFilter;
     String myPhone = "6138507623";
+    public String robs = "6138507623";
+    public String bens = "6138056172";
+    public String survesh = "6473829176";
+    public String eric = "6138516257";
 
 
 
@@ -118,6 +122,7 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
         String method = "GPS";
         String longitudeOutput = ""+lastKnown.getLongitude();
         String latitudeOutput = "" +lastKnown.getLatitude();
+        String username = "";
         BackgroundTask bt = new BackgroundTask(this);
         bt.execute(method,latitudeOutput,longitudeOutput);
     }
@@ -169,6 +174,15 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
 
         }
     }
+    public void notifyFourBros(String input1,String input2,String input3,String input4){
+        String message =lastKnown.getLatitude() +", "+lastKnown.getLongitude();
+        sendSMS(input1,message);
+        sendSMS(input2,message);
+        sendSMS(input3,message);
+        sendSMS(input4,message);
+
+
+    }
     public void sendSMS(String phoneNumber, String message){
         //method that sends a sms with the default messenger application on android
         //for testing these will remain commented out.
@@ -179,7 +193,8 @@ public class GPS extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        notifyEveryone();
+       // notifyEveryone();
+       // notifyFourBros(eric,robs,survesh,bens);
        // sendSMS(myPhone,"TEST");// This is a test, if the sensSMS in notiy Everyone is commented out, this will work equally well
         // and from here we can choose the message and phone Number, and it will only send 1 message to 1 contact
         Toast.makeText(ctx, "Message Sent!", Toast.LENGTH_LONG).show();

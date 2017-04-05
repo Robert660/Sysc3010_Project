@@ -20,7 +20,12 @@ public class AddContacts extends AppCompatActivity implements View.OnClickListen
     private String[] contacts;
     private String[] phoneNumbers;
     private boolean retry;
+    public Boolean firstTime = true;
     public static int size = 0;
+
+    public String robs = "6138507623";
+    public String bens = "6138056172";
+    public String survesh = "6473829176";
 
 
     @Override
@@ -49,10 +54,20 @@ public class AddContacts extends AppCompatActivity implements View.OnClickListen
                 if (!retry) {
                     addNewNumber(cName.getText().toString(), pNum.getText().toString());
                 }
-                eventCheck();
+                else{
+                    break;
+                }
+                if(firstTime) {
+                    eventCheck();
+                    Log.d(TAG, "evenCheck Done");
+                }
                 break;
 
             case R.id.done://if the continue button was pressed
+                if(firstTime){
+                    Toast.makeText(ctx, "Please enter atleast 1 contact", Toast.LENGTH_LONG).show();
+                    break;
+                }
                 GPS myGPS = new GPS();
                 myGPS.setName(contacts);
                 myGPS.setNumbers(phoneNumbers);
@@ -66,6 +81,7 @@ public class AddContacts extends AppCompatActivity implements View.OnClickListen
     public void eventCheck(){
         //start checking for events
 
+        firstTime = false;
         String method = "Event";
         BackgroundTask bt = new BackgroundTask(this);
         bt.execute(method);
@@ -99,14 +115,14 @@ public class AddContacts extends AppCompatActivity implements View.OnClickListen
             retry = true;
             Toast.makeText(ctx, "- not Allowed", Toast.LENGTH_LONG).show();
             //Toast them to not enter dash
+        } else if (inputNumber.length() != 10) {
+            Toast.makeText(ctx, "Invalid Phone Number", Toast.LENGTH_LONG).show();
+            retry = true;
         } else if (!inputNumber.matches(".*\\d+.*")) {
             //if it contains invalid values try again
             Toast.makeText(ctx, "Only numbers allowed", Toast.LENGTH_LONG).show();
             retry = true;
-        } else if (inputNumber.length() != 10) {
-            Toast.makeText(ctx, "Invalid Phone Number", Toast.LENGTH_LONG).show();
-            retry = true;
-        } else {
+        }  else {
             retry = false;
         }
     }
