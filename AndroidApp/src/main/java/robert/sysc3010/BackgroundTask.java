@@ -152,8 +152,13 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader br = new BufferedReader(inputStreamReader);
                 String result = br.readLine();//contains the password for the user
-
-                while (result.equals("<br />")) {
+                
+                /*Since we are trying to connect to a databse on a rpi, the connection will be slow
+                Therefore when reading the line we may see a null value which is <br />, 
+                in this case we wait 1 sec then try reading the line again                
+                */
+                
+                while (result.equals("<br />")) { 
                     try {
                         wait(1000);
                         lock.notify();
@@ -162,7 +167,7 @@ public class BackgroundTask extends AsyncTask<String,String,String> {
                     }
                     result = br.readLine();//contains the password for the user
                 }
-                if(result.contains("failed")){
+                if(result.contains("failed")){//This could be cause since the connection timed out
                     inputStream.close();
                     br.close();
                     listenForEvents();
