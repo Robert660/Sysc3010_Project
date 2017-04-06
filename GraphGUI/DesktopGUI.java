@@ -89,8 +89,6 @@ public class DesktopGUI{
         //Updatable textFields for Force and Acceleration
         JTextField forceField = createUpdateableTextField("", 400, 100);
         JTextField accelField = createUpdateableTextField("", 400, 100);
-        JTextField gpsField = createUpdateableTextField("", screenSize.width/2, 100);
-        UpdateGPSField(connectionUserTable(), gpsField);   
         
         //Creation of the separate panels to organize charts and other data
       	JPanel subPanel1 = new JPanel(new BorderLayout());
@@ -108,10 +106,7 @@ public class DesktopGUI{
 		subPanel1.add(createButtonPanel(stopStart, fastSlow, saveAccel, saveForce), BorderLayout.CENTER);
 		subPanel1.add(createGraphPanel(screenSize.width/2, 490, chartF, BorderLayout.SOUTH), BorderLayout.SOUTH);
 		subPanel2.add(createGraphPanel(screenSize.width/2, screenSize.height/2, speedPanel(connectionSensorData()), BorderLayout.NORTH), BorderLayout.NORTH);
-		subPanel2.add(createTextPanel(forceField, accelField, screenSize.width/2, screenSize.height/8), BorderLayout.CENTER);
-		subPanel2.add(createGPSPanel(gpsField,screenSize.width/2, screenSize.height/8), BorderLayout.SOUTH);
-		
-        
+		subPanel2.add(createTextPanel(forceField, accelField, screenSize.width/2, screenSize.height/8), BorderLayout.SOUTH);		
         
 		runGUI(mainFrame);
         ResultSet f = connectionSensorData();
@@ -155,16 +150,6 @@ public class DesktopGUI{
     	return textPanel;
     }
     
-    private JPanel createGPSPanel(JTextField gps, int width, int height){
-    	JPanel gpsPanel = new JPanel(new FlowLayout());
-    	gps.setFont(new Font("Dialog", 1, 25));
-    	gps.setEditable(false);
-    	gps.setHorizontalAlignment(JTextField.CENTER);
-    	gpsPanel.setPreferredSize(new java.awt.Dimension(width, height));
-    	gpsPanel.add(gps);
-    	return gpsPanel;
-    }
-    
 	private JButton createStopStart() {
 		JButton run = new JButton(PAUSE);
 		run.addActionListener(new ActionListener() {
@@ -182,12 +167,6 @@ public class DesktopGUI{
 			}
 		});
 		return run;
-	}
-	
-	private void UpdateGPSField(ResultSet r, JTextField gps) throws SQLException{
-		while(r.next()){
-			gps.setText("GPS: " + r.getString("long") + " : " + r.getString("lat"));
-		}
 	}
 	
 	private static JFreeChart createStandardDialChart(String s, String s1, ValueDataset valuedataset, double d, double d1, double d2, int i)
