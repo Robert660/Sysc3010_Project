@@ -8,10 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-
-
-
+import android.widget.Toast;
 
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
@@ -40,15 +37,25 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
      * with the two textfields.
      */
     public void userRegister(){
+
         Log.d(TAG,"username ="+regUsername.getText().toString()+
                 " \npassword="+regPassword.getText().toString());
 
         String uName = regUsername.getText().toString();
         String uPass = regPassword.getText().toString();
-        String method = "register";
-        BackgroundTask bt = new BackgroundTask(this);
-        bt.execute(method,uName,uPass);
-        finish();
+        if(uName.contains(";")||uName.contains("/")||uPass.contains(";")||uPass.contains("/")){
+            //Sanitize the database and make sure nobody injects code
+            //more characters could have been excluded but the two major ones for injection
+            //are ; to end code and // to comment out the rest. This allows more freedom for
+            //usernames too
+            Toast.makeText(this, "Invalid Characters", Toast.LENGTH_SHORT).show();
+        }else {
+
+            String method = "register";
+            BackgroundTask bt = new BackgroundTask(this);
+            bt.execute(method, uName, uPass);
+            finish();
+        }
     }
 
     @Override

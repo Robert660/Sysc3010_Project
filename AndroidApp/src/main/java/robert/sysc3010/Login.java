@@ -84,20 +84,25 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
         String uName = etUsername.getText().toString();
         String uPass = etPassword.getText().toString();
-        String method = "login";
-        BackgroundTask bt = new BackgroundTask(this);
-        bt.execute(method,uName,uPass);
-        while(true){
-            if(bt.finished){//TODO COME BACK TO HERE FOR COMMENTS
-                if(bt.check){
-                    startActivity(new Intent(this, AddContacts.class));
-                    break;
-                }
-                break;
+        if(uName.contains(";")||uName.contains("/")||uPass.contains(";")||uPass.contains("/")){
 
+            Toast.makeText(this, "Invalid Characters", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            String method = "login";
+            BackgroundTask bt = new BackgroundTask(this);
+            bt.execute(method, uName, uPass);
+            while (true) {
+                if (bt.finished) {//TODO COME BACK TO HERE FOR COMMENTS
+                    if (bt.check) {
+                        startActivity(new Intent(this, AddContacts.class));
+                        break;
+                    }
+                    break;
+
+                }
             }
         }
-
     }
 
 
