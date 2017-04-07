@@ -404,30 +404,13 @@ public class DesktopGUI{
 		return statement.executeQuery("select * from sensordata");
 	}
     
-   //Connects to the database and returns a resultset with all of the data from the user's table
-   private ResultSet connectionUserTable() throws SQLException {
-		Connection connect = null;
-		try {
-
-			String url = "jdbc:mysql://192.168.43.54:3306/projectdb";
-			Class.forName("com.mysql.jdbc.Driver");
-			connect = DriverManager.getConnection(url, "fooUser", "1234");
-			System.out.println("Database connection to User Table established");
-		}
-		catch (Exception e) {
-			System.out.println("Can't connect to the database.");
-		}
-		Statement statement = connect.createStatement();
-		return statement.executeQuery("select * from users");
-	}
-    
     //Starts the timer
     public void start() {
         timer.start();
     }
 
+    //Runs the GUI
     public static void main(final String[] args) throws SQLException {
-    	
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
