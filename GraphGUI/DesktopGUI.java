@@ -187,7 +187,7 @@ public class DesktopGUI{
 
     //Creates a dial chart with appropriate labels, dataset, the start range, end range, major tick increment, and number
     //of ticks between each major tick increment.
-	private static JFreeChart createStandardDialChart(String title, String textAnnotation, ValueDataset dataset, double start, double end, double mti, int numTicks)
+	private static JFreeChart createDialPlot(String title, String textAnnotation, ValueDataset dataset, double start, double end, double mti, int numTicks)
 	{
 		DialPlot dialplot = new DialPlot();
 		dialplot.setDataset(dataset);
@@ -214,7 +214,7 @@ public class DesktopGUI{
 	
 	//Creates a speedometer dialplot
 	public JFreeChart speedPanel(ResultSet r) throws SQLException{
-		JFreeChart jfreechart = createStandardDialChart("Speedometer", "RPS", new DefaultValueDataset(findMaxSpeed(r)), 0D, 30D, 2D, 3);
+		JFreeChart jfreechart = createDialPlot("Speedometer", "RPS", new DefaultValueDataset(findMaxSpeed(r)), 0D, 30D, 2D, 3);
 		DialPlot dialplot = (DialPlot)jfreechart.getPlot();
 		
 		//Outer Dial Range
@@ -410,7 +410,7 @@ public class DesktopGUI{
     }
 
     //Runs the GUI
-    public static void main(final String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
