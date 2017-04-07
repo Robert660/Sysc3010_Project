@@ -57,7 +57,7 @@ public class DesktopGUI{
     private static final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private Timer timer;
 
-    //Constructs 
+    //Constructs the GUI
     public DesktopGUI() throws SQLException, IOException {
     	
     	//Establish Intial Connection to Database, updates resultset to data in the sensor table
